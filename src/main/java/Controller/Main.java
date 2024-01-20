@@ -4,7 +4,6 @@ import com.gestao.vendas.gestaovendas.Model.conexao.Conexao;
 import com.gestao.vendas.gestaovendas.Model.conexao.ConexaoMysql;
 import com.gestao.vendas.gestaovendas.Model.domain.Categoria;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

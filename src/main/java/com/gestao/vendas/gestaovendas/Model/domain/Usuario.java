@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author campo
  */
-public class Usuario {
+public class Usuario implements ResetTable{
     private Long id;
     private String nome;
     private String senha;
@@ -120,12 +120,15 @@ public class Usuario {
         final Usuario other = (Usuario) obj;
         return Objects.equals(this.id, other.id);
     }
-    
-    public void reset(){
+
+
+    @Override
+    public void reset() {
         this.estado = true;
     }
-    
-    public void mudarEstado(){
+
+    @Override
+    public void mudarEstado() {
         this.estado = !this.estado;
     }
 }
