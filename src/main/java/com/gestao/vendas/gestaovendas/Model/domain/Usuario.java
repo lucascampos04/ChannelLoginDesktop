@@ -20,7 +20,7 @@ public class Usuario implements ResetTable{
     private LocalDateTime dataHoraCriacao;
     private LocalDateTime ultimoLogin;
     
-    public Usuario(Long id, String nome, String senha, String usuario, Perfil peril, boolean estado, LocalDateTime dataHoraCriacao, LocalDateTime ultimoLogin) {
+    public Usuario(Long id, String nome, String senha, String usuario, Perfil peril, LocalDateTime dataHoraCriacao, LocalDateTime ultimoLogin) {
         this.id = id;
         this.nome = nome;
         this.senha = senha;
@@ -34,7 +34,7 @@ public class Usuario implements ResetTable{
     public Usuario(){
         this.estado = true;
     }
-    
+
     public Long getId() {
         return id;
     }

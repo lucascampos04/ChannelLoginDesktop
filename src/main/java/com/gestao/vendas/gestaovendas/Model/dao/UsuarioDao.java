@@ -8,6 +8,7 @@ import com.gestao.vendas.gestaovendas.Model.domain.Usuario;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,18 @@ public class UsuarioDao {
         this.conexao = new ConexaoMysql();
     }
     public String salvar(Usuario usuario){
-        return usuario.getId() == 0 ? adicionar(usuario) : editar(usuario);
+        return usuario.getId() == 0L ? adicionar(usuario) : editar(usuario);
     }
 
     private String adicionar(Usuario usuario){
         String sql = "INSERT INTO usuario(nome, usuario, senha, perfil, estado) VALUES (?, ?, ?, ?, ?)";
+
+        Usuario usuarioTemp = BuscarPeloUsername(usuario.getUsuario());
+
+        if (usuarioTemp != null){
+            return String.format("Erro : Usuario %s já existe no banco de dados ", usuario.getUsuario());
+        }
+
         try {
             PreparedStatement preparedStatement = conexao.obterConexao().prepareStatement(sql);
             preencherValoresPrepereStatement(preparedStatement, usuario);
@@ -49,7 +57,7 @@ public class UsuarioDao {
         preparedStatement.setString(2, usuario.getUsuario());
         preparedStatement.setString(3, usuario.getSenha());
         preparedStatement.setString(4, usuario.getPeril().name());
-        preparedStatement.setString(5, String.valueOf(usuario.isEstado()));
+        preparedStatement.setString(5, usuario.isEstado() ? "1":"0");
 
         if (usuario.getId() != 0){
             preparedStatement.setLong(6, usuario.getId());
@@ -61,7 +69,8 @@ public class UsuarioDao {
         String sql = "SELECT * FROM usuario";
         List<Usuario> usuarios = new ArrayList<>();
         try {
-            ResultSet resultSet = (ResultSet) conexao.obterConexao().prepareStatement(sql);
+            Statement statement = conexao.obterConexao().createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()){
                 usuarios.add(getUser(resultSet));
             }
@@ -85,6 +94,30 @@ public class UsuarioDao {
     }
 
     // Buscando pelo id
-
+    public Usuario BuscarPeloID(Long id){
+        String sql = String.format("SELECT * FROM usuario WHERE id = ?", id);
+        try {
+            ResultSet resultSet = (ResultSet) conexao.obterConexao().prepareStatement(sql);
+            if (resultSet.next()){
+                return getUser(resultSet);
+            }
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+    // Buscando pelo usuario
+    public Usuario BuscarPeloUsername(String usuario){
+        String sql = String.format("SELECT * FROM usuario WHERE id = %s", usuario);
+        try {
+                ResultSet resultSet = (ResultSet) conexao.obterConexao().prepareStatement(sql);
+            if (resultSet.next()){
+                return getUser(resultSet);
+            }
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 
 }
