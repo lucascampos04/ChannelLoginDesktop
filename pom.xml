@@ -11,4 +11,12 @@
         <maven.compiler.target>17</maven.compiler.target>
         <exec.mainClass>com.gestao.vendas.gestaovendas.GestaoVendas</exec.mainClass>
     </properties>
+    
+    <dependencies>
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.25</version>
+      </dependency>
+    </dependencies>
 </project>
