@@ -4,6 +4,7 @@ import com.gestao.vendas.gestaovendas.Model.conexao.Conexao;
 import com.gestao.vendas.gestaovendas.Model.conexao.ConexaoMysql;
 import com.gestao.vendas.gestaovendas.Model.domain.Perfil;
 import com.gestao.vendas.gestaovendas.Model.domain.Usuario;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,30 +41,34 @@ public class UsuarioDao {
             return String.format("Erro : %s", e.getMessage());
         }
     }
-    private String editar(Usuario usuario) {
-        String sql = "UPDATE categoria SET nome = ? , usuario = ?, senha = ?, perfil = ?, estado = ? WHERE id = ?";
+    public String editar(Usuario usuario) {
+        String sql = "UPDATE usuario SET nome = ?, usuario = ?,senha = ?, perfil = ?, estado = ? WHERE id = ?";
         try {
             PreparedStatement preparedStatement = conexao.obterConexao().prepareStatement(sql);
             preencherValoresPrepereStatement(preparedStatement, usuario);
             int result = preparedStatement.executeUpdate();
-            return result == 1 ? "Usuario editar com sucesso" : "Não foi possivel editar o usuario";
-        } catch (SQLException e){
-            return String.format("Erro : %s", e.getMessage());
+            return result == 1 ? "Usuário editado com sucesso" : "Não foi possível editar o usuário";
+        } catch (SQLException e) {
+            return String.format("Erro: %s", e.getMessage());
         }
     }
+
 
     private void preencherValoresPrepereStatement(PreparedStatement preparedStatement, Usuario usuario) throws SQLException {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String senhaCrypt = bCryptPasswordEncoder.encode(usuario.getSenha());
+
         preparedStatement.setString(1, usuario.getNome());
         preparedStatement.setString(2, usuario.getUsuario());
-        preparedStatement.setString(3, usuario.getSenha());
+        preparedStatement.setString(3, senhaCrypt);
         preparedStatement.setString(4, usuario.getPeril().name());
-        preparedStatement.setString(5, usuario.isEstado() ? "1":"0");
+        preparedStatement.setString(5, usuario.isEstado() ? "1" : "0");
 
-        if (usuario.getId() != 0){
+        if (usuario.getId() != 0) {
             preparedStatement.setLong(6, usuario.getId());
-
         }
     }
+
     // Listando usuarios
     public List<Usuario> ListarTodos(){
         String sql = "SELECT * FROM usuario";
@@ -80,6 +85,7 @@ public class UsuarioDao {
         return usuarios;
     }
 
+
     private Usuario getUser(ResultSet resultSet) throws SQLException {
         Usuario usuario = new Usuario();
         usuario.setId(resultSet.getLong("id"));
@@ -94,14 +100,16 @@ public class UsuarioDao {
     }
 
     // Buscando pelo id
-    public Usuario BuscarPeloID(Long id){
-        String sql = String.format("SELECT * FROM usuario WHERE id = ?", id);
+    public Usuario BuscarPeloID(Long id) {
+        String sql = "SELECT * FROM usuario WHERE id = ?";
         try {
-            ResultSet resultSet = (ResultSet) conexao.obterConexao().prepareStatement(sql);
-            if (resultSet.next()){
+            PreparedStatement preparedStatement = conexao.obterConexao().prepareStatement(sql);
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
                 return getUser(resultSet);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
