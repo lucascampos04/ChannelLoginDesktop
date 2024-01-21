@@ -87,15 +87,18 @@ public class UsuarioDao {
 
 
     private Usuario getUser(ResultSet resultSet) throws SQLException {
+        String perfilString = resultSet.getString("perfil");
+        Perfil perfil = Perfil.valueOf(perfilString);
+        
         Usuario usuario = new Usuario();
         usuario.setId(resultSet.getLong("id"));
         usuario.setNome(resultSet.getString("nome"));
         usuario.setUsuario(resultSet.getString("usuario"));
         usuario.setSenha(resultSet.getString("senha"));
-        usuario.setPeril(resultSet.getObject("perfil", Perfil.class));
+        usuario.setPeril(perfil);
         usuario.setEstado(resultSet.getBoolean("estado"));
-        usuario.setDataHoraCriacao(resultSet.getObject("data hora criacao", LocalDateTime.class));
-        usuario.setUltimoLogin(resultSet.getObject("ultimo login", LocalDateTime.class));
+        usuario.setDataHoraCriacao(resultSet.getObject("data_hora_criado", LocalDateTime.class));
+        usuario.setUltimoLogin(resultSet.getObject("ultimo_login", LocalDateTime.class));
         return usuario;
     }
 
@@ -116,13 +119,15 @@ public class UsuarioDao {
     }
     // Buscando pelo usuario
     public Usuario BuscarPeloUsername(String usuario){
-        String sql = String.format("SELECT * FROM usuario WHERE id = %s", usuario);
+        String sql = String.format("SELECT * FROM usuario WHERE usuario = '%s'", usuario);
         try {
-                ResultSet resultSet = (ResultSet) conexao.obterConexao().prepareStatement(sql);
+                PreparedStatement preparedStatement = conexao.obterConexao().prepareStatement(sql);
+                ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
                 return getUser(resultSet);
             }
-        } catch (Exception e){
+        } catch (SQLException e){
+            e.printStackTrace();
             System.out.println(e.getMessage());
         }
         return null;
