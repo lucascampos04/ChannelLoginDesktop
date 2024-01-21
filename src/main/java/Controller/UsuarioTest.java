@@ -12,7 +12,6 @@ public class UsuarioTest {
         UsuarioDao usuarioDao = new UsuarioDao();
         String message = usuarioDao.editar(usuario);
         System.out.println(message);
-
-
+            
     }
 }
