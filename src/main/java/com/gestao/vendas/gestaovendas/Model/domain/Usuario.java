@@ -17,18 +17,18 @@ public class Usuario implements ResetTable{
     private String usuario;
     private Perfil peril;
     private boolean estado;
-    private LocalDateTime dataHoraCriacao;
-    private LocalDateTime ultimoLogin;
+    private LocalDateTime data_hora_criado;
+    private LocalDateTime ultimo_login;
     
-    public Usuario(Long id, String nome, String senha, String usuario, Perfil peril, LocalDateTime dataHoraCriacao, LocalDateTime ultimoLogin) {
+    public Usuario(Long id, String nome, String senha, String usuario, Perfil peril, LocalDateTime data_hora_criado, LocalDateTime ultimo_login) {
         this.id = id;
         this.nome = nome;
         this.senha = senha;
         this.usuario = usuario;
         this.peril = peril;
         this.estado = true;
-        this.dataHoraCriacao = dataHoraCriacao;
-        this.ultimoLogin = ultimoLogin;
+        this.data_hora_criado = data_hora_criado;
+        this.ultimo_login = ultimo_login;
     }
     
     public Usuario(){
@@ -84,19 +84,19 @@ public class Usuario implements ResetTable{
     }
 
     public LocalDateTime getDataHoraCriacao() {
-        return dataHoraCriacao;
+        return data_hora_criado;
     }
 
-    public void setDataHoraCriacao(LocalDateTime dataHoraCriacao) {
-        this.dataHoraCriacao = dataHoraCriacao;
+    public void setDataHoraCriacao(LocalDateTime data_hora_criado) {
+        this.data_hora_criado = data_hora_criado;
     }
 
     public LocalDateTime getUltimoLogin() {
-        return ultimoLogin;
+        return ultimo_login;
     }
 
-    public void setUltimoLogin(LocalDateTime ultimoLogin) {
-        this.ultimoLogin = ultimoLogin;
+    public void setUltimoLogin(LocalDateTime ultimo_login) {
+        this.ultimo_login = ultimo_login;
     }
 
     @Override

@@ -26,7 +26,7 @@ public class Main {
                 // Substituindo os parâmetros na instrução SQL pelos valores do objeto Categoria
                 preparedStatement.setString(1, categoria.getNome());
                 preparedStatement.setString(2, categoria.getDescricao());
-
+       
                 // Executando a instrução SQL de inserção e obtendo o resultado
                 int result = preparedStatement.executeUpdate();
 
